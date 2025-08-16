@@ -1,0 +1,143 @@
+meta:
+  author: Flaavf
+  name: FIT
+units:
+  # Internal variables
+  $default_width: cx
+  $default_height: cy
+  $default_padding: cy
+  $default_spread: cx
+  # Custom variables
+  switch_x: cx # 18mm
+  switch_y: cy # 17mm
+  cap_x: switch_x - 0.5 # 17.5mm
+  cap_y: switch_y - 0.5 # 16.5mm
+  padding: 4
+points:
+  zones:
+    hand:
+      anchor:
+        shift: [150, -150]
+      columns:
+        pinky:
+          rows.mod.skip: true
+        ring:
+          key.stagger: 0.5switch_y
+          rows.mod.skip: true
+        middle:
+          key.stagger: 0.25switch_y
+        index:
+          key.stagger: -0.25switch_y
+        inner:
+          key.stagger: -0.25switch_y
+        thumb:
+          rows.upper.skip: true
+          rows.center.skip: true
+      rows:
+        mod:
+        lower:
+        center:
+        upper:
+outlines:
+  plate:
+    - what: rectangle
+      where: true
+      size: [switch_x, switch_y]
+    - what: polygon
+      points:
+        - ref: hand_thumb_lower
+          shift: [-0.5switch_x, 2.5switch_y]
+        - ref: hand_thumb_lower
+          shift: [-0.5switch_x, 0.5switch_y]
+        - ref: hand_thumb_lower
+          shift: [0.5switch_x, 0.5switch_y]
+        - ref: hand_thumb_lower
+          shift: [0.5switch_x, 2.5switch_y]
+  board:
+    - what: rectangle
+      where: true
+      size: [switch_x + padding, switch_y + padding]
+    - what: polygon
+      points:
+        - ref: hand_thumb_lower
+          shift: [-0.5switch_x - 0.5padding, 2.5switch_y + 0.5padding]
+        - ref: hand_thumb_lower
+          shift: [-0.5switch_x - 0.5padding, 0.5switch_y - 0.5padding]
+        - ref: hand_thumb_lower
+          shift: [0.5switch_x + 0.5padding, 0.5switch_y - 0.5padding]
+        - ref: hand_thumb_lower
+          shift: [0.5switch_x + 0.5padding, 2.5switch_y + 0.5padding]
+  caps:
+    - what: rectangle
+      where: true
+      size: [cap_x, cap_y]
+  switches:
+    - what: rectangle
+      where: true
+      size: [switch_x, switch_y]
+  preview:
+    - what: outline
+      name: board
+      operation: stack
+    - what: outline
+      name: caps
+      operation: stack
+pcbs.FIT:
+  template: kicad8
+  outlines:
+    left:
+      outline: board
+  footprints:
+    sockets:
+      what: ceoloide/switch_choc_v1_v2
+      where: true
+      params:
+        reversible: true
+        hotswap: true
+        choc_v1_support: true
+        include_keycap: true
+        keycap_height: cap_y
+        keycap_width: cap_x
+        from: "{{column_net}}"
+        to: "{{colrow}}"
+    diodes:
+      what: ceoloide/diode_tht_sod123
+      where: true
+      params:
+        reversible: true
+        from: "{{colrow}}"
+        to: "{{row_net}}"
+      adjust:
+        shift: [0, -5]
+    controller:
+      what: ceoloide/mcu_nice_nano
+      where:
+        ref: hand_thumb_lower
+        shift: [0, 28]
+        rotate: 0
+      params:
+        reversible: true
+    display:
+      what: ceoloide/display_nice_view
+      where:
+        ref: hand_thumb_lower
+        shift: [0, 26.5]
+        rotate: 0
+      params:
+        reversible: true
+    plug:
+      what: ceoloide/battery_connector_jst_ph_2
+      where:
+        ref: hand_thumb_lower
+        shift: [-0.5switch_x, -0.15switch_y]
+        rotate: 0
+      params:
+        reversible: true
+    toggle:
+      what: ceoloide/power_switch_smd_side
+      where:
+        ref: hand_inner_upper
+        shift: [1switch_x, 0.5switch_y+0.5]
+        rotate: 90
+      params:
+        reversible: true

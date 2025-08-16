@@ -1,0 +1,47 @@
+units:
+  # Rendering variables
+  $default_width: cx
+  $default_height: cy
+  # Key size
+  kx: cx
+  ky: cy
+  # Key with padding
+  px: kx + 2
+  py: ky + 2
+  # Keycap size
+  kcx: cx - 0.5
+  kcy: cy - 0.5
+points:
+  key:
+    padding: ky
+    spread: kx
+  zones:
+    hand:
+      columns:
+        pinky:
+        ring:
+          key.stagger: 0.5ky
+        middle:
+          key.stagger: 0.25ky
+        index:
+          key.stagger: -0.5ky
+        inner:
+      rows:
+        lower:
+        center:
+        upper:
+    thumb:
+      anchor:
+        ref: hand_inner_lower
+        shift: [-2kx, -ky]
+      columns:
+        t-outer:
+          rows.t-upper.skip: true
+        t-layer:
+          rows.t-upper.skip: true
+        t-home:
+          rows.t-upper.skip: true
+        t-inner:
+      rows:
+        t-lower:
+        t-upper:
